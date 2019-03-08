@@ -26,58 +26,160 @@ export default {
     return {
       schema: {
   "type": "object",
-  "properties": {
-     "reqType":{ 
-      "title":"Choose a type",
-      "type": "string",
-      "enum": [
-      "Restriction",
-      "Functional Requirement",
-      "Quality Requirement"
-      ]
-  }},
-  "dependencies": {
-    "reqType": {
-      "oneOf": [
+ "properties": {
+   "ReqType":{
+      "title":"Requirement Type",
+      "type":"string",
+      "oneOf":[
         {
-          "$ref": "#/definitions/userInt"
+          "const":"Constraint",
+          "title":"Constraint"
         },
         {
-          "$ref": "#/definitions/autoAct"
+          "const":"FunctionalReq",
+          "title":"Functional Requirements"
         },
-        {
-          "$ref": "#/definitions/extInt"
+                {
+          "const":"QualityReq",
+          "title":"Quality Requirement"
         }
       ]
-    }
+    },
+    "name": {
+      "title":"Requirements name",
+      "type": "string"
+    },
   },
+  "allOf": [
+    {
+      "$ref": "#/definitions/propertiesA"
+    },
+    {
+      "$ref": "#/definitions/propertiesB"
+    }
+  ],
+  "oneOf": [
+    {
+      "$ref": "#/definitions/userInt"
+    },
+    {
+      "$ref": "#/definitions/autoAct"
+    },
+    {
+      "$ref": "#/definitions/extInt"
+    }
+  ],
   "definitions": {
+    "propertiesA": {
+      "properties": {
+        "condition": {
+        "title": "Requirement have a conditional?",
+        "type": "boolean"
+        }  
+      },
+      "dependencies": {
+        "condition": {
+          "properties": {
+            "ConditionDescription": {
+              "title":"Plase enter a condition",
+              "type": "string",
+              "maxLength": 2000
+            }
+          }
+        }
+      }
+    },
+    "propertiesB": {
+      "properties": {
+        "Imperative":{
+          "title":"Imperative",
+          "type":"string",
+          "enum":[
+            "Must", "Should","Could"
+          ]
+        },
+      },
+        "dependencies":{
+          "Imperative":{
+            "properties":{
+              "SystemName":{
+                "title":"System or System Family Name",
+                "type":"string"
+              }
+            }
+            
+          }
+        }
+    },
     "userInt": {
       "title": "User Interface",
       "properties": {
         "type": {
+          "type": "string",
+          "title": "System Activity",
           "const": "userInt"
         },
+        "User":{
+          "title":"User",
+          "type":"string"
+        },
+        "ProcessVerb":{
+          "title":"Process Verb",
+          "type":"string"
+        },
+        "Object":{
+          "title":"Objet (Noun)",
+          "type":"string"
+        }
       }
     },
     "autoAct": {
       "title": "Autonomous Activity",
       "properties": {
         "type": {
+          "type": "string",
           "const": "autoAct"
         },
-
+        "ProcessVerb":{
+          "title":"Process Verb",
+          "type":"string"
+        },
+        "Object":{
+          "title":"Objet (Noun)",
+          "type":"string"
+        }
       }
     },
     "extInt": {
-      "title": "External interface",
+      "title":"External Interface",
       "properties": {
-        "type": {
+        "type":{
+          "type": "string",
           "const": "extInt"
         },
-      }
+        "System":{
+          "title":"External System or Device",
+          "type":"string"
+        },
+        "From":{
+        "title": "Interface requirement interaction",
+        "type": "string",
+        "enum":[
+          "From","To"
+        ]
+        },
+        "ProcessVerb":{
+          "title":"Process Verb",
+          "type":"string"
+        },
+        "Object":{
+          "title":"Objet (Noun)",
+          "type":"string"
+        }
+      }  
     }
   }
+  
 },
       dataObject: {},
       formValid: false,
