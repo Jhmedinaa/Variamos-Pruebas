@@ -25,6 +25,7 @@ export default {
   data() {
     return {
       schema: {
+  "description": "RequireX Template",
   "type": "object",
  "properties": {
    "ReqType":{
@@ -130,6 +131,21 @@ export default {
         "Object":{
           "title":"Objet (Noun)",
           "type":"string"
+        },
+        "Objectcondition": {
+        "title": "Object have a conditional?",
+        "type": "boolean"
+        }  
+      },
+      "dependencies":{
+        "Objectcondition": {
+          "properties": {
+            "ConditionDescription": {
+              "type": "string",
+              "title":"Plase enter a condition of the type \"if and only if\"",
+              "maxLength": 2000
+            }
+          }
         }
       }
     },
@@ -147,6 +163,21 @@ export default {
         "Object":{
           "title":"Objet (Noun)",
           "type":"string"
+        },
+        "Objectcondition": {
+        "title": "Object have a conditional?",
+        "type": "boolean"
+        }  
+      },
+      "dependencies":{
+        "Objectcondition": {
+          "properties": {
+            "ConditionDescription": {
+              "type": "string",
+              "title":"Plase enter a condition of the type \"if and only if\"",
+              "maxLength": 2000
+            }
+          }
         }
       }
     },
@@ -175,8 +206,23 @@ export default {
         "Object":{
           "title":"Objet (Noun)",
           "type":"string"
+        },
+        "Objectcondition": {
+        "title": "Object have a conditional?",
+        "type": "boolean"
+        } 
+      },
+      "dependencies":{
+        "Objectcondition": {
+          "properties": {
+            "ConditionDescription": {
+              "type": "string",
+              "title":"Plase enter a condition of the type \"if and only if\"",
+              "maxLength": 2000
+            }
+          }
         }
-      }  
+      }
     }
   }
   
