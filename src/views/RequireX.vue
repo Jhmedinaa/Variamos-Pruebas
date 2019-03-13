@@ -72,7 +72,7 @@ export default {
       schema: {
         description: "RequireX Template",
         type: "object",
-        required: ["reqType", "name", "imperative"],
+        required: ["reqType", "name", "imperative", "systemActivity"],
         properties: {
           reqType: {
             title: "Requirement Type",
@@ -107,6 +107,7 @@ export default {
           },
           systemActivity: {
             title: "System Activity",
+            type: "string",
             oneOf: [
               {
                 $ref: "#/definitions/userInt"
@@ -141,17 +142,6 @@ export default {
             required: ["systemName"]
           }
         },
-        oneOf: [
-          {
-            $ref: "#/definitions/userInt"
-          },
-          {
-            $ref: "#/definitions/autoAct"
-          },
-          {
-            $ref: "#/definitions/extInt"
-          }
-        ],
         definitions: {
           userInt: {
             title: "User Interface",
@@ -289,13 +279,11 @@ export default {
       window.alert(err);
     },
     submit() {
-      if (this.$refs.requireXForm.validate()) {
+        this.require = "The " + this.dataObject.systemName + " " + this.dataObject.imperative;
+        this.dialog = true;
+      if (this.$refs.requireXForm.validate()) {      
         //Ejemplo de concatenación
-        this.require =
-          "Example concatenation" +
-          this.dataObject.name +
-          " " +
-          this.dataObject.reqType;
+       
         this.dialog = true;
       } else {
         this.validation = true;
