@@ -1,25 +1,30 @@
 <template>
   <div>
     <div v-if="validation">
-      <v-alert color="red" :value="!formValid" type="error" transition="scale-transition">Please, check the fields.</v-alert>
+      <v-alert
+        color="red"
+        :value="!formValid"
+        type="error"
+        transition="scale-transition"
+      >Please, check the fields.</v-alert>
     </div>
     <div>
       <v-form v-model="formValid" ref="requireXForm">
         <v-jsonschema-form
-          v-if="schema"
-          :schema="schema"
-          :model="dataObject"
-          :options="options"
-          @error="showError"
+        v-if="schema"
+        :schema="schema"
+        :model="dataObject"
+        :options="options"
+        @error="showError"
+        @change="change"
+        @input="input"
         />
-        <v-btn @click="submit()" color="dark">Generate</v-btn>
+        <v-btn @click="submit()" dark  color="success" >Generate</v-btn>
       </v-form>
-      
     </div>
 
     <div class="text-xs-center">
       <v-dialog v-model="dialog" width="500">
-    
         <v-card>
           <v-card-title class="headline grey lighten-2" primary-title>RequireX</v-card-title>
 
@@ -43,10 +48,12 @@
 <script>
 import Vue from "vue";
 import Vuetify from "vuetify";
+
 import Draggable from "vuedraggable";
 import axios from "axios";
 import VueAxios from "vue-axios";
 import Swatches from "vue-swatches";
+
 
 import VJsonschemaForm from "@koumoul/vuetify-jsonschema-form";
 
@@ -59,7 +66,7 @@ Vue.component("draggable", Draggable);
 export default {
   components: { VJsonschemaForm },
   data() {
-    return {      
+    return {
       dialog: false,
       require: "",
       schema: {
@@ -119,7 +126,7 @@ export default {
               conditionDescription: {
                 title: "Plase enter a condition",
                 type: "string",
-                maxLength: 2000
+                maxLength: 2000,                
               }
             },
             required: ["conditionDescription"]
@@ -166,7 +173,7 @@ export default {
                 title: "Objet (Noun)",
                 type: "string"
               },
-              objectCondition: {
+              systemConditionDescription: {
                 title: "Object have a conditional?",
                 type: "boolean"
               }
@@ -175,14 +182,14 @@ export default {
             dependencies: {
               objectCondition: {
                 properties: {
-                  conditionDescription: {
+                  systemConditionDescription: {
                     type: "string",
                     title:
                       'Plase enter a condition of the type "if and only if"',
                     maxLength: 2000
                   }
                 },
-                required: ["conditionDescription"]
+                required: ["systemConditionDescription"]
               }
             }
           },
@@ -201,7 +208,7 @@ export default {
                 title: "Objet (Noun)",
                 type: "string"
               },
-              objectCondition: {
+              systemConditionDescription: {
                 title: "Object have a conditional?",
                 type: "boolean"
               }
@@ -210,14 +217,14 @@ export default {
             dependencies: {
               objectCondition: {
                 properties: {
-                  conditionDescription: {
+                  systemConditionDescription: {
                     type: "string",
                     title:
                       'Plase enter a condition of the type "if and only if"',
                     maxLength: 2000
                   }
                 },
-                required: ["conditionDescription"]
+                required: ["systemConditionDescription"]
               }
             }
           },
@@ -245,7 +252,7 @@ export default {
                 title: "Objet (Noun)",
                 type: "string"
               },
-              objectCondition: {
+              systemConditionDescription: {
                 title: "Object have a conditional?",
                 type: "boolean"
               }
@@ -254,14 +261,14 @@ export default {
             dependencies: {
               objectCondition: {
                 properties: {
-                  conditionDescription: {
+                  systemConditionDescription: {
                     type: "string",
                     title:
                       'Plase enter a condition of the type "if and only if"',
                     maxLength: 2000
                   }
                 },
-                required: ["conditionDescription"]
+                required: ["systemConditionDescription"]
               }
             }
           }
@@ -282,13 +289,23 @@ export default {
       window.alert(err);
     },
     submit() {
-      if (this.$refs.requireXForm.validate()) {   
+      if (this.$refs.requireXForm.validate()) {
         //Ejemplo de concatenación
-        this.require = "Example concatenation" + this.dataObject.name + " " + this.dataObject.reqType;
+        this.require =
+          "Example concatenation" +
+          this.dataObject.name +
+          " " +
+          this.dataObject.reqType;
         this.dialog = true;
       } else {
         this.validation = true;
       }
+    },
+    change(e) {
+      console.log('"change" event', e);
+    },
+    input(e) {
+      console.log('"input" event', e);
     }
   }
 };
