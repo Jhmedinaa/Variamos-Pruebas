@@ -29,6 +29,7 @@
           <v-card-title class="headline grey lighten-2" primary-title>RequireX</v-card-title>
 
           <v-card-text>
+            <h1>{{ this.dataObject.name }}</h1>
             <pre>{{ JSON.stringify(dataObject, null, 2) }}</pre>
             <p>{{this.require}}</p>
           </v-card-text>
@@ -104,11 +105,9 @@ export default {
             title: "Imperative",
             type: "string",
             enum: ["Must", "Should", "Could"]
-          },
-          systemActivity: {
-            title: "System Activity",
-            type: "string",
-            oneOf: [
+          }
+        },
+         oneOf: [
               {
                 $ref: "#/definitions/userInt"
               },
@@ -118,9 +117,7 @@ export default {
               {
                 $ref: "#/definitions/extInt"
               }
-            ]
-          }
-        },
+            ],
         dependencies: {
           condition: {
             properties: {
@@ -144,9 +141,9 @@ export default {
         },
         definitions: {
           userInt: {
-            title: "User Interface",
+            title: "User Interaction",
             properties: {
-              type: {
+              systemActivity: {
                 type: "string",
                 title: "System Activity",
                 const: "userInt"
@@ -163,14 +160,14 @@ export default {
                 title: "Objet (Noun)",
                 type: "string"
               },
-              systemConditionDescription: {
+              systemConditionDescriptionState: {
                 title: "Object have a conditional?",
                 type: "boolean"
               }
             },
             required: ["user", "processVerb", "object"],
             dependencies: {
-              objectCondition: {
+              systemConditionDescriptionState: {
                 properties: {
                   systemConditionDescription: {
                     type: "string",
@@ -186,7 +183,7 @@ export default {
           autoAct: {
             title: "Autonomous Activity",
             properties: {
-              type: {
+              systemActivity: {
                 type: "string",
                 const: "autoAct"
               },
@@ -198,14 +195,14 @@ export default {
                 title: "Objet (Noun)",
                 type: "string"
               },
-              systemConditionDescription: {
+              systemConditionDescriptionState: {
                 title: "Object have a conditional?",
                 type: "boolean"
               }
             },
             required: ["processVerb", "object"],
             dependencies: {
-              objectCondition: {
+              systemConditionDescriptionState: {
                 properties: {
                   systemConditionDescription: {
                     type: "string",
@@ -221,7 +218,7 @@ export default {
           extInt: {
             title: "External Interface",
             properties: {
-              type: {
+              systemActivity: {
                 type: "string",
                 const: "extInt"
               },
@@ -242,20 +239,21 @@ export default {
                 title: "Objet (Noun)",
                 type: "string"
               },
-              systemConditionDescription: {
+              systemConditionDescriptionState: {
                 title: "Object have a conditional?",
                 type: "boolean"
               }
             },
             required: ["system", "from", "processVerb", "object"],
             dependencies: {
-              objectCondition: {
+              systemConditionDescriptionState: {
                 properties: {
                   systemConditionDescription: {
                     type: "string",
                     title:
                       'Plase enter a condition of the type "if and only if"',
-                    maxLength: 2000
+                    maxLength: 2000,
+                    description: "It is a conditional of the object and is optional, the expression Si is used and only if"
                   }
                 },
                 required: ["systemConditionDescription"]
@@ -278,11 +276,30 @@ export default {
     showError(err) {
       window.alert(err);
     },
-    submit() {
-        this.require = "The " + this.dataObject.systemName + " " + this.dataObject.imperative;
-        this.dialog = true;
+    submit() {     
+
       if (this.$refs.requireXForm.validate()) {      
-        //Ejemplo de concatenación
+        //Si hay una condición
+        if(this.dataObject.condition){
+            this.require += this.dataObject.conditionDescription + " ";
+        }
+
+        this.require = "The " + this.dataObject.systemName + " " + this.dataObject.imperative;
+        //Validate system activity
+        if(this.dataObject.systemActivity == "userInt"){
+          this.require += " " + this.dataObject.processVerb + " " + this.dataObject.object ;
+        }else if(this.dataObject.systemActivity == "userInt"){
+          this.require += " provide the " + this.dataObject.user + " the capacity ";
+          this.require += " " + this.dataObject.processVerb + " " + this.dataObject.object ;
+        }else{
+          this.require += " have the capacity of " + this.dataObject.processVerb + " " 
+          + this.dataObject.object + " "  + this.dataObject.from  + " the " + this.dataObject.system; 
+        }
+
+        //Validat conditions
+        if(this.dataObject.systemConditionDescriptionState){
+           this.require += ", " + this.dataObject.systemConditionDescription; 
+        }
        
         this.dialog = true;
       } else {
