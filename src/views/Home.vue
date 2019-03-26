@@ -1,22 +1,13 @@
 <template>
-  <div>
-    <div class="border-bottom text-left"><h1 class="h2">{{ $t("home_variamos") }}</h1></div>
-    <div class="div-text-area">VariaMos is a modeling tool that incorporates a language to represent and simulate families of systems.
-      <br /><br />
-      <img src="@/assets/images/logo.png" />
-    </div>
-  </div>
+  <HelloWorld />
 </template>
 
 <script>
-export default {
-  name: 'home',
-  data () {
-    return {}
-  }
-}
-</script>
+  import HelloWorld from '../components/HelloWorld'
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
+  export default {
+    components: {
+      HelloWorld
+    }
+  }
+</script>

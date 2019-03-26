@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import './plugins/vuetify'
+import './plugins/vuetify'
 import VueI18n from 'vue-i18n'
 import App from './App.vue'
 import router from './router'

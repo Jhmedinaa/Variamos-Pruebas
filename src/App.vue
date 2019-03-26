@@ -1,15 +1,20 @@
 <template>
-  <div id="app">
-
-    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-          <router-link  to="./" class="navbar-brand col-sm-3 col-md-2 ">{{ $t("app_variamos") }}</router-link>
-          <input class="form-control form-control-dark w-100 height-100" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
-          <ul class="navbar-nav px-3">
-            <li class="nav-item text-nowrap">
-              <a class="nav-link">Sign out</a>
-            </li>
-          </ul>
-        </nav>
+  <v-app>
+    <v-content>
+      <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+        <router-link to="./" class="navbar-brand col-sm-3 col-md-2 mr-0">{{ $t("app_variamos") }}</router-link>
+        <input
+          class="form-control form-control-dark w-100 height-100"
+          type="text"
+          v-bind:placeholder="$t('app_search')"
+          v-bind:aria-label="$t('app_search')"
+        >
+        <ul class="navbar-nav px-3">
+          <li class="nav-item text-nowrap">
+            <a class="nav-link">Sign out</a>
+          </li>
+        </ul>
+      </nav>
 
         <div class="container-fluid">
             <div class="row">
@@ -28,7 +33,7 @@
                         {{ $t("app_menu_models") }}
                       </a>
                         <ul class="nav flex-column submenu">
-                          <li class="nav-item">
+                          <!-- <li class="nav-item">
                             <router-link class="nav-link" to="/models/feature">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline>
                             <line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
@@ -48,29 +53,11 @@
                             <line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                             {{ $t("app_menu_binding_f_c") }}
                             </router-link>
-                          </li>
+                          </li> -->
+                          <Filetree></Filetree>
                         </ul>
 
                     </li>
-                    <li class="nav-item">
-                         <a class="nav-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather">
-                        <circle cx="12" cy="12" r="10" />
-                        <circle cx="12" cy="12" r="5" />
-                        </svg>
-                        {{ $t("app_menu_requireX") }}
-                         </a>
-                      <ul class="nav flex-column submenu">
-                          <li class="nav-item">
-                            <router-link class="nav-link" to="/requireX">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                            {{ $t("app_menu_requireX") }}
-                            </router-link>
-                          </li>
-                      </ul>
-                    </li>
-                    
                     <li class="nav-item">
                       <router-link class="nav-link" to="/applies">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather">
@@ -151,11 +138,19 @@
           </div>
 
         </div>
-  </div>
+  
+    </v-content>
+  </v-app>
 </template>
 
 <script>
+import HelloWorld from "./components/HelloWorld";
+import Filetree from './views/Filemanagetree.vue'
+
 export default {
+components:{
+    Filetree
+  },
   data: function(){
     return {
     }
@@ -167,69 +162,3 @@ export default {
   }
 }
 </script>
-
-<style>
-@media (min-width: 768px){
-  .top-main{
-      -ms-flex: 0 0 83%;
-      flex: 0 0 83%;
-      max-width: 83%;
-  }
-}
-
-.height-100 {
-    height: 100% !important;
-}
-
-.dropdown-item.active, .dropdown-item:active {
-   background-color: gainsboro !important;
-}
-
-.submenu{
-  padding-left: 25px !important;
-}
-
-#mainview {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 7px;
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  display: none;
-  transition: opacity .3s ease;
-}
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-.modal-container {
-  background: #fff;
-  width: 650px;
-  border-radius: 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all .3s ease;
-  margin: 0 auto;
-  padding: 20px 30px;
-}
-.modal-footer {
-  margin-top: 15px;
-}
-.modal-enter, .modal-leave {
-  opacity: 0;
-}
-.modal-enter .modal-container, .modal-leave .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-</style>
