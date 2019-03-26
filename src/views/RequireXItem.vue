@@ -1,60 +1,48 @@
 <template>
   <div>
-    <v-tabs fixed-tabs>
-      <v-tab>Item 1</v-tab>
-      <v-tab>Item 2</v-tab>
-      <v-tab>Item 3</v-tab>
-    </v-tabs>
+    <div v-if="validation">
+      <v-alert
+        color="red"
+        :value="!formValid"
+        type="error"
+        transition="scale-transition"
+      >Please, check the fields.</v-alert>
+    </div>
+    <div>
+      <v-form v-model="formValid" ref="requireXForm">
+        <v-jsonschema-form
+        v-if="schema"
+        :schema="schema"
+        :model="dataObject"
+        :options="options"
+        @error="showError"
+        @change="change"
+        @input="input"
+        />
+        <v-btn @click="submit()" dark  color="success" >Generate</v-btn>
+      </v-form>
+    </div>
 
-    <v-tabs-items>
-      <v-tab-item>
-        <div>
-          <div v-if="validation">
-            <v-alert
-              color="red"
-              :value="!formValid"
-              type="error"
-              transition="scale-transition"
-            >Please, check the fields.</v-alert>
-          </div>
-          <div>
-            <v-form v-model="formValid" ref="requireXForm">
-              <v-jsonschema-form
-                v-if="schema"
-                :schema="schema"
-                :model="dataObject"
-                :options="options"
-                @error="showError"
-                @change="change"
-                @input="input"
-              />
-              <v-btn @click="submit()" dark color="success">Generate</v-btn>
-            </v-form>
-          </div>
+    <div class="text-xs-center">
+      <v-dialog v-model="dialog" width="500">
+        <v-card>
+          <v-card-title class="headline grey lighten-2" primary-title>RequireX</v-card-title>
 
-          <div class="text-xs-center">
-            <v-dialog v-model="dialog" width="500">
-              <v-card>
-                <v-card-title class="headline grey lighten-2" primary-title>RequireX</v-card-title>
+          <v-card-text>
+            <h1>{{ this.dataObject.name }}</h1>
+            <pre>{{ JSON.stringify(dataObject, null, 2) }}</pre>
+            <p>{{this.require}}</p>
+          </v-card-text>
 
-                <v-card-text>
-                  <h1>{{ this.dataObject.name }}</h1>
-                  <pre>{{ JSON.stringify(dataObject, null, 2) }}</pre>
-                  <p>{{this.require}}</p>
-                </v-card-text>
+          <v-divider></v-divider>
 
-                <v-divider></v-divider>
-
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="primary" flat @click="dialog = false">I accept</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </div>
-        </div>
-      </v-tab-item>
-    </v-tabs-items>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" flat @click="dialog = false">I accept</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
   </div>
 </template>
 
@@ -66,6 +54,7 @@ import Draggable from "vuedraggable";
 import axios from "axios";
 import VueAxios from "vue-axios";
 import Swatches from "vue-swatches";
+
 
 import VJsonschemaForm from "@koumoul/vuetify-jsonschema-form";
 
@@ -118,24 +107,24 @@ export default {
             enum: ["Must", "Should", "Could"]
           }
         },
-        oneOf: [
-          {
-            $ref: "#/definitions/userInt"
-          },
-          {
-            $ref: "#/definitions/autoAct"
-          },
-          {
-            $ref: "#/definitions/extInt"
-          }
-        ],
+         oneOf: [
+              {
+                $ref: "#/definitions/userInt"
+              },
+              {
+                $ref: "#/definitions/autoAct"
+              },
+              {
+                $ref: "#/definitions/extInt"
+              }
+            ],
         dependencies: {
           condition: {
             properties: {
               conditionDescription: {
                 title: "Plase enter a condition",
                 type: "string",
-                maxLength: 2000
+                maxLength: 2000,                
               }
             },
             required: ["conditionDescription"]
@@ -264,8 +253,7 @@ export default {
                     title:
                       'Plase enter a condition of the type "if and only if"',
                     maxLength: 2000,
-                    description:
-                      "It is a conditional of the object and is optional, the expression Si is used and only if"
+                    description: "It is a conditional of the object and is optional, the expression Si is used and only if"
                   }
                 },
                 required: ["systemConditionDescription"]
@@ -288,44 +276,31 @@ export default {
     showError(err) {
       window.alert(err);
     },
-    submit() {
-      if (this.$refs.requireXForm.validate()) {
+    submit() {     
+
+      if (this.$refs.requireXForm.validate()) {      
         //Si hay una condición
-        if (this.dataObject.condition) {
-          this.require += this.dataObject.conditionDescription + " ";
+        if(this.dataObject.condition){
+            this.require += this.dataObject.conditionDescription + " ";
         }
 
-        this.require =
-          "The " +
-          this.dataObject.systemName +
-          " " +
-          this.dataObject.imperative;
+        this.require = "The " + this.dataObject.systemName + " " + this.dataObject.imperative;
         //Validate system activity
-        if (this.dataObject.systemActivity == "userInt") {
-          this.require +=
-            " " + this.dataObject.processVerb + " " + this.dataObject.object;
-        } else if (this.dataObject.systemActivity == "userInt") {
-          this.require +=
-            " provide the " + this.dataObject.user + " the capacity ";
-          this.require +=
-            " " + this.dataObject.processVerb + " " + this.dataObject.object;
-        } else {
-          this.require +=
-            " have the capacity of " +
-            this.dataObject.processVerb +
-            " " +
-            this.dataObject.object +
-            " " +
-            this.dataObject.from +
-            " the " +
-            this.dataObject.system;
+        if(this.dataObject.systemActivity == "userInt"){
+          this.require += " " + this.dataObject.processVerb + " " + this.dataObject.object ;
+        }else if(this.dataObject.systemActivity == "userInt"){
+          this.require += " provide the " + this.dataObject.user + " the capacity ";
+          this.require += " " + this.dataObject.processVerb + " " + this.dataObject.object ;
+        }else{
+          this.require += " have the capacity of " + this.dataObject.processVerb + " " 
+          + this.dataObject.object + " "  + this.dataObject.from  + " the " + this.dataObject.system; 
         }
 
         //Validat conditions
-        if (this.dataObject.systemConditionDescriptionState) {
-          this.require += ", " + this.dataObject.systemConditionDescription;
+        if(this.dataObject.systemConditionDescriptionState){
+           this.require += ", " + this.dataObject.systemConditionDescription; 
         }
-
+       
         this.dialog = true;
       } else {
         this.validation = true;
@@ -344,5 +319,4 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 </style>
-
 
